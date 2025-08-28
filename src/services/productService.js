@@ -1,6 +1,9 @@
 import productModel from "./models/productModel.js";
 
-class productDBManager {
+class productService {
+    constructor(ProductsRepository) {
+        this.ProductsRepository = ProductsRepository
+    }
 
     async getAllProducts(params) {
         const paginate = {
@@ -57,4 +60,4 @@ class productDBManager {
     }
 }
 
-export { productDBManager };
+export { productService };

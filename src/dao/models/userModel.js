@@ -31,7 +31,15 @@ import mongoose from "mongoose"
         role:{
             type: String,
             default: 'user',
-        }
+        },
+        passwordResetToken: {
+            type: String, 
+            default: null 
+        },
+        passwordResetExpires: { 
+            type: Date,
+            default: null 
+        },
     })
 
 export default mongoose.model("User", userSchema)

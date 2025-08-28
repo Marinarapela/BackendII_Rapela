@@ -1,121 +1,34 @@
 import { Router } from 'express';
-import { productDBManager } from '../dao/productDBManager.js';
-import { cartDBManager } from '../dao/cartDBManager.js';
+import CartController from '../controllers/cartController.js';
+import { cartService } from '../services/cartService.js';
+import { productService } from '../services/productService.js';
+import { auth } from '../middleware/auth.js';
+import { authorize } from '../middleware/authorize.js';
 
 const router = Router();
-const ProductService = new productDBManager();
-const CartService = new cartDBManager(ProductService);
 
-router.get('/:cid', async (req, res) => {
+// Inyección de dependencias
+const ProductService = new productService();
+const CartService = new cartService(ProductService);
+const cartController = new CartController(CartService);
 
-    try {
-        const result = await CartService.getProductsFromCartByID(req.params.cid);
-        res.send({
-            status: 'success',
-            payload: result
-        });
-    } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
-
-router.post('/', async (req, res) => {
-
-    try {
-        const result = await CartService.createCart();
-        res.send({
-            status: 'success',
-            payload: result
-        });
-    } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
-
-router.post('/:cid/product/:pid', async (req, res) => {
-
-    try {
-        const result = await CartService.addProductByID(req.params.cid, req.params.pid)
-        res.send({
-            status: 'success',
-            payload: result
-        });
-    } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
-
-router.delete('/:cid/product/:pid', async (req, res) => {
-
-    try {
-        const result = await CartService.deleteProductByID(req.params.cid, req.params.pid)
-        res.send({
-            status: 'success',
-            payload: result
-        });
-    } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
-
-router.put('/:cid', async (req, res) => {
-
-    try {
-        const result = await CartService.updateAllProducts(req.params.cid, req.body.products)
-        res.send({
-            status: 'success',
-            payload: result
-        });
-    } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
-
-router.put('/:cid/product/:pid', async (req, res) => {
-
-    try {
-        const result = await CartService.updateProductByID(req.params.cid, req.params.pid, req.body.quantity)
-        res.send({
-            status: 'success',
-            payload: result
-        });
-    } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
-
-router.delete('/:cid', async (req, res) => {
-
-    try {
-        const result = await CartService.deleteAllProducts(req.params.cid)
-        res.send({
-            status: 'success',
-            payload: result
-        });
-    } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
+// Rutas
+router.get('/:cid', auth, cartController.getById);
+router.post('/', auth, cartController.create);
+router.post(
+    '/:cid/product/:pid',
+    auth,
+    authorize ('user'),
+    cartController.addProduct
+);
+router.delete('/:cid/product/:pid', auth, authorize('user'), cartController.deleteProduct);
+router.put('/:cid', auth, authorize('user'), cartController.updateAllProducts);
+router.put(
+    '/:cid/product/:pid',
+    auth,
+    authorize('user'),
+    cartController.updateProduct
+);
+router.delete('/:cid', auth, authorize('user'), cartController.deleteAllProducts);
 
 export default router;

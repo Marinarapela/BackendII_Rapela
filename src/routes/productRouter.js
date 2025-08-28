@@ -1,95 +1,34 @@
 import { Router } from 'express';
-import { productDBManager } from '../dao/productDBManager.js';
+import ProductController from '../controllers/productController.js'
 import { uploader } from '../utils/multerUtil.js';
+import { productService } from '../services/productService.js';
+import { ProductsRepository } from '../repository/productsRepository.js';
+import { auth } from '../middleware/auth.js';
+import { authorize } from '../middleware/authorize.js';
 
 const router = Router();
-const ProductService = new productDBManager();
 
-router.get('/', async (req, res) => {
-    const result = await ProductService.getAllProducts(req.query);
+// Inyección de dependencias
+const ProductService = new productService(new ProductsRepository())
+const productController = new ProductController(ProductService)
 
-    res.send({
-        status: 'success',
-        payload: result
-    });
-});
-
-router.get('/:pid', async (req, res) => {
-
-    try {
-        const result = await ProductService.getProductByID(req.params.pid);
-        res.send({
-            status: 'success',
-            payload: result
-        });
-    } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
-
-router.post('/', uploader.array('thumbnails', 3), async (req, res) => {
-
-    if (req.files) {
-        req.body.thumbnails = [];
-        req.files.forEach((file) => {
-            req.body.thumbnails.push(file.path);
-        });
-    }
-
-    try {
-        const result = await ProductService.createProduct(req.body);
-        res.send({
-            status: 'success',
-            payload: result
-        });
-    } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
-
-router.put('/:pid', uploader.array('thumbnails', 3), async (req, res) => {
-
-    if (req.files) {
-        req.body.thumbnails = [];
-        req.files.forEach((file) => {
-            req.body.thumbnails.push(file.filename);
-        });
-    }
-
-    try {
-        const result = await ProductService.updateProduct(req.params.pid, req.body);
-        res.send({
-            status: 'success',
-            payload: result
-        });
-    } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
-
-router.delete('/:pid', async (req, res) => {
-
-    try {
-        const result = await ProductService.deleteProduct(req.params.pid);
-        res.send({
-            status: 'success',
-            payload: result
-        });
-    } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
+//Rutas
+router.get('/', auth, productController.getAll)
+router.get('/:pid', auth, productController.getById)
+router.post(
+    '/',
+    auth,
+    authorize('admin'),
+    uploader.array('thumbnails', 3),
+    productController.create
+)
+router.put(
+    '/:pid',
+    auth,
+    authorize ('admin'),
+    uploader.array('thumbnails', 3),
+    productController.update
+)
+router.delete('/:pid', auth, authorize('admin'), productController.delete)
 
 export default router;
