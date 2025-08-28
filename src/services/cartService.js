@@ -1,4 +1,4 @@
-import { CartRepository } from "../repository/cartRepository.js";
+import { CartRepository } from "../repository/cartsRepository.js";
 
 export class CartService {
     constructor(productService) {

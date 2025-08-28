@@ -1,11 +1,11 @@
-import { TicketsRepository } from '../repositories/ticketsRepository.js';
+import { TicketRepository } from '../repository/ticketsRepository.js';
 import { cartModel } from '../dao/models/cartModel.js';
-import { productModel } from '../dao/models/productModel.js';
+import productModel from '../dao/models/productModel.js';
 import { nanoid } from 'nanoid';
 
 export class TicketService {
     constructor() {
-        this.ticketsRepository = new TicketsRepository();
+        this.ticketsRepository = new TicketRepository();
     }
 
     async purchaseCart(userId, cartId) {

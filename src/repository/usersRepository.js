@@ -1,4 +1,4 @@
-import { usersMongoDao } from "../dao/usersDbDAO";
+import { usersMongoDao } from "../dao/usersDbDAO.js";
 
 export class UsersRepository{
     #usersDao;
@@ -10,6 +10,10 @@ export class UsersRepository{
     async getUsers() {
         return this.#usersDao.getAllUsers(); 
     }
+
+    async getUserByEmail(email) {
+    return this.#usersDao.getByEmail(email);
+}
 
     async getUserById(id) {
         return this.#usersDao.getById(id);

@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import crypto from 'crypto';
 import jwt from "jsonwebtoken";
-import { UsersRepository } from "../repository/userRepository.js";
+import { UsersRepository } from "../repository/usersRepository.js";
 import { UserDTO } from "../dto/userDTO.js";
 import nodemailer from 'nodemailer';
 

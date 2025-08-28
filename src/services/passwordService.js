@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
-import { PasswordRepository } from '../repositories/passwordRepository.js';
+import { PasswordRepository } from '../repository/passwordRepository.js';
 
 export class PasswordService {
     constructor() {

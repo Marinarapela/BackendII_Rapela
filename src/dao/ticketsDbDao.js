@@ -1,4 +1,4 @@
-import { TicketModel } from "./models/ticketModel"
+import { TicketModel } from "./models/ticketModel.js"
 
 export class TicketsMongoDao {
     async create(ticket) {

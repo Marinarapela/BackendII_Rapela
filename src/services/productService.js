@@ -1,4 +1,4 @@
-import productModel from "./models/productModel.js";
+import productModel from '../dao/models/productModel.js'
 
 class productService {
     constructor(ProductsRepository) {
@@ -29,7 +29,7 @@ class productService {
         return products;
     }
 
-    async getProductByID(pid) {
+    async getProductById(pid) {
         const product = await productModel.findOne({_id: pid});
 
         if (!product) throw new Error(`El producto ${pid} no existe!`);

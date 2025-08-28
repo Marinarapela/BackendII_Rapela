@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import CartController from '../controllers/cartController.js';
-import { cartService } from '../services/cartService.js';
+import { CartService } from '../services/cartService.js';
 import { productService } from '../services/productService.js';
 import { auth } from '../middleware/auth.js';
 import { authorize } from '../middleware/authorize.js';
@@ -9,8 +9,8 @@ const router = Router();
 
 // Inyección de dependencias
 const ProductService = new productService();
-const CartService = new cartService(ProductService);
-const cartController = new CartController(CartService);
+const cartService = new CartService(ProductService);
+const cartController = new CartController(cartService);
 
 // Rutas
 router.get('/:cid', auth, cartController.getById);

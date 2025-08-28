@@ -1,4 +1,4 @@
-import User from '../dao/models/userModel'
+import User from '../dao/models/userModel.js'
 
 export class PasswordRepository {
 

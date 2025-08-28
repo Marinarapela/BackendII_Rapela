@@ -1,4 +1,4 @@
-import { TicketsMongoDao } from "../dao/ticketsDbDao"
+import { TicketsMongoDao } from "../dao/ticketsDbDao.js"
 
 export class TicketRepository{
     constructor() {

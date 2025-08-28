@@ -3,10 +3,13 @@ import passportJWT from 'passport-jwt'
 import local from "passport-local"
 import bcrypt from 'bcrypt'
 import User from '../dao/models/userModel.js'
+import { UsersRepository } from "../repository/usersRepository.js";
 
 const JwtStrategy = passportJWT.Strategy;
 const ExtractJwt = passportJWT.ExtractJwt;
 const LocalStrategy = local.Strategy;
+
+const userRepository = new UsersRepository();
 
 const buscarToken = req => {
     const authHeader = req.headers.authorization || '';
@@ -15,6 +18,8 @@ const buscarToken = req => {
         }
     return null;
 };
+
+
 
 export const iniciarPassport=()=>{
 passport.use("register",
@@ -30,25 +35,31 @@ passport.use("register",
                     return done (null,false, { message: "Todos los campos obligatorios deben estar completos" })
                 }
 
-                const existingUser = await User.findOne({ email: username });
+                const normalizedEmail = username.trim().toLowerCase();
+
+               // const existingUser = await User.findOne({ email: username });
+                const existingUser = await userRepository.getUserByEmail(normalizedEmail);
+                    console.log("EMAIL POSTMAN:", username);
+                    console.log("EXISTING USER DAO:", existingUser);
                 if (existingUser) {
                     return done(null, false, { message: "El email ya está registrado" });
                 }
 
                 password=bcrypt.hashSync(password,10)
 
-                let newUser = await User.create({
+                let newUser = await userRepository.createUser({
                     first_name,
                     last_name,
-                    email:username,
+                    email:normalizedEmail,
                     age,
                     cart,
-                    password
+                    password,
                 })
-            
+                console.log("NEW USER:", newUser);
                 return done (null, newUser)
 
             } catch (error) {
+                console.error("ERROR EN REGISTER:", error);
                 return done (error)
                 
             }

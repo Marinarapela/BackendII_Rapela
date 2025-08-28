@@ -1,12 +1,13 @@
+import { productService } from '../services/productService.js'
+
+const service = new productService();
 
 export default class ProductController {
-    constructor(productService) {
-        this.productService = productService
-    }
+
 
     getAll = async (req, res) => {
         try {
-            const products = await this.productService.getAllProducts(req.query)
+            const products = await service.getAllProducts(req.query)
             res.json({ status: "success", payload: products })
         } catch (err) {
             res.status(500).json({ status: "error", message: err.message })
@@ -15,7 +16,7 @@ export default class ProductController {
 
     getById = async (req, res) => {
         try {
-            const product = await this.productService.getProductById(req.params.id)
+            const product = await service.getProductById(req.params.id)
             res.json({ status: "success", payload: product })
         } catch (err) {
             res.status(500).json({ status: "error", message: err.message })
@@ -24,7 +25,7 @@ export default class ProductController {
 
     create = async (req, res) => {
         try {
-            const newProduct = await this.productService.createProduct(req.body)
+            const newProduct = await service.createProduct(req.body)
             res.status(201).json({ status: "success", payload: newProduct })
         } catch (err) {
             res.status(400).json({ status: "error", message: err.message })
@@ -34,7 +35,7 @@ export default class ProductController {
 // PUT /api/products/:id
     update = async (req, res) => {
         try {
-            const updated = await this.productService.updateProduct(req.params.id, req.body);
+            const updated = await service.updateProduct(req.params.id, req.body);
             res.json({ status: "success", payload: updated });
         } catch (err) {
             res.status(400).json({ status: "error", message: err.message });
@@ -44,7 +45,7 @@ export default class ProductController {
     // DELETE /api/products/:id
     delete = async (req, res) => {
         try {
-            const result = await this.productService.deleteProduct(req.params.id);
+            const result = await service.deleteProduct(req.params.id);
             res.json({ status: "success", payload: result });
         } catch (err) {
             res.status(404).json({ status: "error", message: err.message });

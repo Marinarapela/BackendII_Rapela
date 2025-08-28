@@ -13,8 +13,8 @@ const ProductService = new productService(new ProductsRepository())
 const productController = new ProductController(ProductService)
 
 //Rutas
-router.get('/', auth, productController.getAll)
-router.get('/:pid', auth, productController.getById)
+router.get('/', productController.getAll)
+router.get('/:pid', productController.getById)
 router.post(
     '/',
     auth,

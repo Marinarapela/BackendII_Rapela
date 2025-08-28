@@ -1,5 +1,5 @@
 
-import { CartMongoDao } from "../dao/cartMongoDao.js";
+import { CartMongoDao } from "../dao/cartDbDao.js";
 
 export class CartRepository {
     #cartDao = new CartMongoDao();

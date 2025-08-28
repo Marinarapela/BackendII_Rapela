@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import TicketController from '../controllers/ticketController.js';
-import { auth, authorize } from '../middleware/auth.js';
+import { auth } from '../middleware/auth.js';
+import { authorize } from '../middleware/authorize.js';
 
 const router = Router();
 const ticketController = new TicketController();
