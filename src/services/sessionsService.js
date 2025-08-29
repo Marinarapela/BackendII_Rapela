@@ -23,7 +23,7 @@ export class SessionService {
     }
 
     async loginUser(email, password) {
-        const user = await this.userRepository.getUserByEmail(email);
+        const user = await this.userRepository.getUserByEmail(email,  { includePassword: true });
         if (!user) throw new Error("Credenciales incorrectas");
 
         const validPass = bcrypt.compareSync(password, user.password);

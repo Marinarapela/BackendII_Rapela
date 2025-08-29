@@ -4,6 +4,7 @@ import local from "passport-local"
 import bcrypt from 'bcrypt'
 import User from '../dao/models/userModel.js'
 import { UsersRepository } from "../repository/usersRepository.js";
+import {config} from './config.js'
 
 const JwtStrategy = passportJWT.Strategy;
 const ExtractJwt = passportJWT.ExtractJwt;
@@ -98,7 +99,7 @@ passport.use("login",
 passport.use("current",
     new JwtStrategy(
         {
-            secretOrKey: process.env.SECRET_SESSION,
+            secretOrKey: config.SECRET_SESSION,
             jwtFromRequest: ExtractJwt.fromExtractors([buscarToken])
         },
         async(payload, done)=>{

@@ -14,7 +14,7 @@ class userService{
     }
 
     async getUserByEmail(email){
-        return await this.dao.getBy({email})
+        return await this.dao.getByEmail(email)
     }
 }
 
